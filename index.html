@@ -5,13 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Analisa Kompleksitas Algoritma - Perbandingan metode Iteratif dan Rekursif untuk menghitung huruf kapital dalam string. Tubes AKA Telkom University."
+      content="Analisa Kompleksitas Algoritma - Perbandingan metode Iteratif dan Rekursif untuk menghitung huruf kapital dalam string."
     />
     <meta
       name="keywords"
       content="algoritma, kompleksitas, iteratif, rekursif, O(n), analisis, tubes, AKA"
     />
-    <meta name="author" content="Tubes AKA" />
     <title>Analisa Kompleksitas Algoritma - Penghitung Huruf Kapital</title>
 
     <!-- External CSS -->
@@ -21,24 +20,40 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   </head>
   <body>
+    <!-- Background Decorations -->
+    <div class="bg-decorations">
+      <span class="code-symbol" style="top: 10%; left: 5%">{ }</span>
+      <span class="code-symbol" style="top: 20%; right: 8%">O(n)</span>
+      <span class="code-symbol" style="top: 35%; left: 3%">&lt;/&gt;</span>
+      <span class="code-symbol" style="top: 50%; right: 5%">[ ]</span>
+      <span class="code-symbol" style="top: 65%; left: 8%">( )</span>
+      <span class="code-symbol" style="top: 75%; right: 10%">0 1</span>
+      <span class="code-symbol" style="top: 85%; left: 4%">f(x)</span>
+      <span class="code-symbol" style="top: 15%; left: 92%">++</span>
+      <span class="code-symbol" style="top: 45%; left: 95%">==</span>
+      <span class="code-symbol" style="top: 60%; left: 2%">=&gt;</span>
+      <span class="code-symbol" style="top: 30%; right: 3%">&&</span>
+      <span class="code-symbol" style="top: 90%; right: 6%">if</span>
+    </div>
+
     <div class="container">
       <!-- ==================== HEADER ==================== -->
       <header>
-        <h1>📊 Analisa <span>Kompleksitas Algoritma</span></h1>
+        <h1>Analisa <span>Kompleksitas Algoritma</span></h1>
         <p class="subtitle">
           Studi Kasus: Menghitung Jumlah Huruf Kapital dalam String
         </p>
         <div class="badge-group">
-          <span class="badge">🔄 Iteratif</span>
-          <span class="badge">🔁 Rekursif</span>
-          <span class="badge">⏱️ Running Time</span>
-          <span class="badge">📈 Grafik</span>
+          <span class="badge">Iteratif</span>
+          <span class="badge">Rekursif</span>
+          <span class="badge">Running Time</span>
+          <span class="badge">Grafik</span>
         </div>
       </header>
 
       <!-- ==================== STUDY CASE ==================== -->
       <section class="study-case">
-        <h2>📋 Deskripsi Studi Kasus</h2>
+        <h2>Deskripsi Studi Kasus</h2>
         <p>
           Dalam pemrograman, seringkali kita perlu menganalisis teks untuk
           berbagai keperluan seperti validasi input, pemrosesan dokumen, atau
@@ -67,31 +82,38 @@
 
       <!-- ==================== INPUT SECTION ==================== -->
       <section class="input-section">
-        <label for="inputText">✍️ Masukkan Teks / Kalimat:</label>
+        <label for="inputText"
+          >Masukkan Teks / Kalimat (maks. 10.000 karakter):</label
+        >
         <textarea
           id="inputText"
+          maxlength="10000"
           placeholder="Ketik kalimat di sini, contoh: 'Halo Dunia, Saya Sedang Belajar Algoritma Kompleksitas.'..."
+          oninput="updateCharCount()"
         ></textarea>
+        <div class="char-counter">
+          <span id="charCount">0</span> / 10.000 karakter
+        </div>
 
         <div class="controls">
           <button class="btn-outline" onclick="loadSample()">
-            📄 Contoh Panjang
+            Contoh 10.000 Karakter
           </button>
-          <button class="btn-secondary" onclick="clearInput()">🗑️ Reset</button>
+          <button class="btn-secondary" onclick="clearInput()">Reset</button>
           <button class="btn-primary" onclick="runAnalysis()">
-            ▶️ Jalankan Analisa
+            Jalankan Analisa
           </button>
         </div>
         <div id="statusMessage"></div>
       </section>
 
       <!-- ==================== RESULTS GRID ==================== -->
-      <h2 class="section-title">📊 Hasil Perbandingan</h2>
+      <h2 class="section-title">Hasil Perbandingan</h2>
       <div class="results-grid">
         <!-- Iterative Card -->
         <div class="algo-card iterative">
           <h3>
-            🔄 Metode Iteratif
+            Metode Iteratif
             <span class="algo-badge">Looping</span>
           </h3>
           <div class="metric">
@@ -111,7 +133,7 @@
             <span class="metric-value success">O(1)</span>
           </div>
           <button class="code-toggle" onclick="toggleCode('codeIter')">
-            🔽 Lihat Kode
+            Lihat Kode
           </button>
           <div id="codeIter" class="code-preview">
             <pre>
@@ -131,7 +153,7 @@ function countCapitalIterative(str) {
         <!-- Recursive Card -->
         <div class="algo-card recursive">
           <h3>
-            🔁 Metode Rekursif
+            Metode Rekursif
             <span class="algo-badge">Self-Calling</span>
           </h3>
           <div class="metric">
@@ -151,7 +173,7 @@ function countCapitalIterative(str) {
             <span class="metric-value danger">O(n)</span>
           </div>
           <button class="code-toggle" onclick="toggleCode('codeRec')">
-            🔽 Lihat Kode
+            Lihat Kode
           </button>
           <div id="codeRec" class="code-preview">
             <pre>
@@ -173,11 +195,11 @@ function countCapitalRecursive(str, index = 0) {
 
       <!-- ==================== MEMORY VISUALIZATION ==================== -->
       <section class="vis-section">
-        <h2>💾 Analisa Penggunaan Memori (Stack)</h2>
+        <h2>Analisa Penggunaan Memori (Stack)</h2>
 
         <div class="memory-comparison">
           <div class="memory-box">
-            <h4>✅ Iteratif (Efisien)</h4>
+            <h4>Iteratif (Efisien)</h4>
             <p>
               Hanya menggunakan satu variabel counter. Memori tetap stabil
               berapapun panjang input.
@@ -185,15 +207,15 @@ function countCapitalRecursive(str, index = 0) {
             <div class="bar-container">
               <span class="bar-label">Penggunaan Stack Memory</span>
               <div class="bar-bg">
-                <div id="barIter" class="bar-fill iterative" style="width: 8%">
-                  O(1)
+                <div id="barIter" class="bar-fill iterative" style="width: 20%">
+                  O(1) - Konstan
                 </div>
               </div>
             </div>
           </div>
 
           <div class="memory-box">
-            <h4>⚠️ Rekursif (Boros Memori)</h4>
+            <h4>Rekursif (Boros Memori)</h4>
             <p>
               Setiap karakter membuat "tumpukan" fungsi baru di memori hingga
               base case tercapai.
@@ -201,8 +223,8 @@ function countCapitalRecursive(str, index = 0) {
             <div class="bar-container">
               <span class="bar-label">Penggunaan Stack Memory</span>
               <div class="bar-bg">
-                <div id="barRec" class="bar-fill recursive" style="width: 5%">
-                  O(n)
+                <div id="barRec" class="bar-fill recursive" style="width: 15%">
+                  O(n) Linear
                 </div>
               </div>
             </div>
@@ -210,30 +232,46 @@ function countCapitalRecursive(str, index = 0) {
         </div>
 
         <div class="explanation">
-          <strong>📌 Kesimpulan Memori:</strong><br />
+          <strong>Kesimpulan Memori:</strong><br />
           Meskipun kedua algoritma memeriksa setiap karakter sekali (Linear Time
           <code>O(n)</code>), <strong>Metode Iteratif</strong> jauh lebih baik
           untuk teks panjang karena kompleksitas ruang <code>O(1)</code>.
           <br /><br />
           Metode Rekursif memiliki kompleksitas ruang <code>O(n)</code>. Jika
-          input sangat panjang (> 8.000 karakter), metode rekursif akan
-          menyebabkan <em>Stack Overflow</em> (error), sedangkan iteratif tetap
-          berjalan lancar.
+          input sangat panjang, metode rekursif akan menyebabkan
+          <em>Stack Overflow</em> (error), sedangkan iteratif tetap berjalan
+          lancar.
+        </div>
+
+        <div class="stack-test-section">
+          <h4>Test Stack Limit Browser</h4>
+          <p>
+            Klik tombol untuk mengecek berapa maksimal kedalaman rekursi yang
+            didukung browser Anda.
+          </p>
+          <div class="stack-test-controls">
+            <button class="btn-primary" onclick="testStackLimit()">
+              Test Stack Limit
+            </button>
+            <div id="stackLimitResult" class="stack-result">
+              Klik tombol untuk memulai test.
+            </div>
+          </div>
         </div>
       </section>
 
       <!-- ==================== RUNNING TIME CHART ==================== -->
       <section class="chart-section">
-        <h2>📈 Grafik Perbandingan Running Time</h2>
+        <h2>Grafik Perbandingan Running Time</h2>
         <p>
           Jalankan benchmark untuk melihat perbandingan waktu eksekusi antara
           algoritma Iteratif dan Rekursif pada berbagai ukuran input (10, 50,
-          100, 500, 1000, 2000, 3000, 5000, 7000, 8000 karakter).
+          100, 500, 1000, 2000, 3000, 5000, 7000, 8000, 9000, 10000 karakter).
         </p>
 
         <div class="benchmark-controls">
           <button class="btn-success" onclick="runBenchmark()">
-            📊 Run Benchmark
+            Run Benchmark
           </button>
           <div id="benchmarkStatus" class="benchmark-status">
             Klik tombol untuk menjalankan benchmark dengan berbagai ukuran
@@ -248,7 +286,7 @@ function countCapitalRecursive(str, index = 0) {
 
       <!-- ==================== ANALYSIS SECTION ==================== -->
       <section class="analysis-section">
-        <h2>🔬 Analisis Perbandingan Kedua Algoritma</h2>
+        <h2>Analisis Perbandingan Kedua Algoritma</h2>
 
         <table class="complexity-table">
           <thead>
@@ -293,7 +331,7 @@ function countCapitalRecursive(str, index = 0) {
         </table>
 
         <div class="analysis-conclusion">
-          <h4>🏆 Kesimpulan Akhir</h4>
+          <h4>Kesimpulan Akhir</h4>
           <p>
             Untuk studi kasus <strong>"Menghitung Huruf Kapital"</strong>,
             algoritma <strong>Iteratif</strong>
@@ -315,7 +353,7 @@ function countCapitalRecursive(str, index = 0) {
 
       <!-- ==================== REFERENCES ==================== -->
       <section class="references-section">
-        <h2>📚 Referensi</h2>
+        <h2>Referensi</h2>
         <ul>
           <li>
             <strong>Introduction to Algorithms (CLRS)</strong> - Cormen,
@@ -356,18 +394,6 @@ function countCapitalRecursive(str, index = 0) {
           </li>
         </ul>
       </section>
-
-      <!-- ==================== FOOTER ==================== -->
-      <footer>
-        <p>
-          📘 Tubes Analisa Kompleksitas Algoritma |
-          <a href="https://github.com" target="_blank">GitHub Repository</a>
-        </p>
-        <p class="footer-info">
-          Dibuat dengan ❤️ untuk memahami perbedaan algoritma Iteratif dan
-          Rekursif
-        </p>
-      </footer>
     </div>
 
     <!-- External JavaScript -->

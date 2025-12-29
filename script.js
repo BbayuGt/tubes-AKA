@@ -41,6 +41,37 @@ function countCapitalRecursive(str, index = 0) {
   return isCapital + countCapitalRecursive(str, index + 1);
 }
 
+/**
+ * Test maximum stack depth of the browser
+ */
+function testStackLimit() {
+  const resultEl = document.getElementById("stackLimitResult");
+  resultEl.innerHTML = '<span class="loading">Testing...</span>';
+  resultEl.className = "stack-result";
+  
+  // Use setTimeout to allow UI to update
+  setTimeout(() => {
+    let depth = 0;
+    
+    function recurse() {
+      depth++;
+      recurse();
+    }
+    
+    try {
+      recurse();
+    } catch (e) {
+      // Stack overflow caught
+    }
+    
+    // Format the result
+    const formattedDepth = depth.toLocaleString("id-ID");
+    resultEl.innerHTML = `Stack Limit Browser Anda: <strong>${formattedDepth}</strong> level<br>
+      <small style="color: #64748b;">Artinya, maksimal input untuk rekursif adalah sekitar ${formattedDepth} karakter.</small>`;
+    resultEl.className = "stack-result success";
+  }, 100);
+}
+
 // ==========================================
 // UI HELPER FUNCTIONS
 // ==========================================
@@ -55,9 +86,9 @@ function toggleCode(id) {
   // Update button text
   const btn = el.previousElementSibling;
   if (el.classList.contains("show")) {
-    btn.innerHTML = "🔼 Sembunyikan Kode";
+    btn.innerHTML = "Sembunyikan Kode";
   } else {
-    btn.innerHTML = "🔽 Lihat Kode";
+    btn.innerHTML = "Lihat Kode";
   }
 }
 
@@ -66,7 +97,16 @@ function toggleCode(id) {
  */
 function clearInput() {
   document.getElementById("inputText").value = "";
+  document.getElementById("charCount").innerText = "0";
   resetResults();
+}
+
+/**
+ * Update character count display
+ */
+function updateCharCount() {
+  const text = document.getElementById("inputText").value;
+  document.getElementById("charCount").innerText = text.length.toLocaleString("id-ID");
 }
 
 /**
@@ -77,8 +117,8 @@ function resetResults() {
   document.getElementById("iterTime").innerText = "- ms";
   document.getElementById("recResult").innerText = "-";
   document.getElementById("recTime").innerText = "- ms";
-  document.getElementById("barRec").style.width = "5%";
-  document.getElementById("barRec").innerText = "O(n)";
+  document.getElementById("barRec").style.width = "15%";
+  document.getElementById("barRec").innerText = "O(n) Linear";
   document.getElementById("statusMessage").innerHTML = "";
 }
 
@@ -88,9 +128,10 @@ function resetResults() {
 function loadSample() {
   const sentence =
     "Algoritma Pemrograman Itu Menyenangkan. Belajar Coding Sangat Seru! ";
-  let longText = sentence.repeat(100); // Sekitar 6700 karakter
+  let longText = sentence.repeat(145); // Sekitar 10000 karakter
   document.getElementById("inputText").value = longText;
-  showStatus(`✅ Teks sampel dimuat (${longText.length} karakter)`, "success");
+  document.getElementById("charCount").innerText = longText.length.toLocaleString("id-ID");
+  showStatus(`Teks sampel dimuat (${longText.length} karakter)`, "success");
 }
 
 /**
@@ -113,7 +154,7 @@ function runAnalysis() {
   const text = document.getElementById("inputText").value;
 
   if (!text) {
-    alert("⚠️ Mohon masukkan teks terlebih dahulu!");
+    alert("Mohon masukkan teks terlebih dahulu!");
     return;
   }
 
@@ -128,19 +169,19 @@ function runAnalysis() {
   document.getElementById("iterTime").innerText = iterTime + " ms";
 
   // 2. Jalankan Rekursif (Dengan Error Handling untuk Stack Overflow)
-  const SAFE_RECURSION_LIMIT = 8000;
+  const SAFE_RECURSION_LIMIT = 10000;
 
   if (text.length > SAFE_RECURSION_LIMIT) {
     document.getElementById("recResult").innerHTML =
       "<span class='error-msg'>Stack Overflow!</span>";
     document.getElementById("recTime").innerText = "Gagal";
     document.getElementById("barRec").style.width = "100%";
-    document.getElementById("barRec").innerText = "⚠️ MEMORY FULL";
+    document.getElementById("barRec").innerText = "MEMORY FULL";
     document.getElementById("barRec").style.background =
-      "linear-gradient(90deg, #dc2626, #991b1b)";
+      "linear-gradient(90deg, #1e3a8a, #0f172a)";
 
     showStatus(
-      `⚠️ Teks terlalu panjang (${text.length} karakter) untuk metode Rekursif. Browser limit stack: ~${SAFE_RECURSION_LIMIT} karakter.`,
+      `Teks terlalu panjang (${text.length} karakter) untuk metode Rekursif. Browser limit stack: ~${SAFE_RECURSION_LIMIT} karakter.`,
       "error"
     );
   } else {
@@ -157,14 +198,14 @@ function runAnalysis() {
       // Visualisasi Stack
       let stackPercentage = Math.min(
         100,
-        Math.max(5, (text.length / 2000) * 100)
+        Math.max(15, (text.length / 5000) * 100)
       );
       document.getElementById("barRec").style.width = stackPercentage + "%";
-      document.getElementById("barRec").innerText = `Stack: ${text.length}`;
+      document.getElementById("barRec").innerText = `Stack Depth: ${text.length}`;
       document.getElementById("barRec").style.background = "";
 
       showStatus(
-        `✅ Analisa selesai. Panjang teks: ${text.length} karakter. Huruf kapital ditemukan: ${iterResult}`,
+        `Analisa selesai. Panjang teks: ${text.length} karakter. Huruf kapital ditemukan: ${iterResult}`,
         "success"
       );
     } catch (e) {
@@ -172,7 +213,7 @@ function runAnalysis() {
       document.getElementById("recResult").innerHTML =
         "<span class='error-msg'>Error</span>";
       document.getElementById("recTime").innerText = "-";
-      showStatus("❌ Terjadi kesalahan pada eksekusi rekursif.", "error");
+      showStatus("Terjadi kesalahan pada eksekusi rekursif.", "error");
     }
   }
 }
@@ -219,7 +260,7 @@ function runSingleBenchmark(size) {
 
   // Benchmark Recursive (only if safe)
   let recAvg = null;
-  if (size <= 8000) {
+  if (size <= 10000) {
     let recTimes = [];
     for (let i = 0; i < iterations; i++) {
       const start = performance.now();
@@ -237,13 +278,13 @@ function runSingleBenchmark(size) {
  * Run full benchmark across various input sizes
  */
 async function runBenchmark() {
-  const sizes = [10, 50, 100, 500, 1000, 2000, 3000, 5000, 7000, 8000];
+  const sizes = [10, 50, 100, 500, 1000, 2000, 3000, 5000, 7000, 8000, 9000, 10000];
   const statusEl = document.getElementById("benchmarkStatus");
   const btn = document.querySelector(".btn-success");
 
   // Disable button during benchmark
   btn.disabled = true;
-  btn.innerHTML = "⏳ Running...";
+  btn.innerHTML = "Running...";
   btn.classList.add("loading");
 
   // Reset data
@@ -255,7 +296,7 @@ async function runBenchmark() {
 
   for (let i = 0; i < sizes.length; i++) {
     const size = sizes[i];
-    statusEl.innerHTML = `<span class="loading">🔄 Menjalankan benchmark untuk ${size} karakter... (${
+    statusEl.innerHTML = `<span class="loading">Menjalankan benchmark untuk ${size} karakter... (${
       i + 1
     }/${sizes.length})</span>`;
 
@@ -273,10 +314,10 @@ async function runBenchmark() {
 
   // Re-enable button
   btn.disabled = false;
-  btn.innerHTML = "📊 Run Benchmark";
+  btn.innerHTML = "Run Benchmark";
   btn.classList.remove("loading");
 
-  statusEl.innerHTML = `✅ Benchmark selesai! Diuji dengan ${sizes.length} ukuran input berbeda (10 - 8000 karakter).`;
+  statusEl.innerHTML = `Benchmark selesai! Diuji dengan ${sizes.length} ukuran input berbeda (10 - 10000 karakter).`;
 }
 
 /**
@@ -299,8 +340,8 @@ function updateChart() {
           {
             label: "Iteratif O(n)",
             data: benchmarkData.iterative,
-            borderColor: "#10b981",
-            backgroundColor: "rgba(16, 185, 129, 0.1)",
+            borderColor: "#2563eb",
+            backgroundColor: "rgba(37, 99, 235, 0.1)",
             borderWidth: 3,
             fill: true,
             tension: 0.3,
@@ -310,8 +351,8 @@ function updateChart() {
           {
             label: "Rekursif O(n)",
             data: benchmarkData.recursive,
-            borderColor: "#ef4444",
-            backgroundColor: "rgba(239, 68, 68, 0.1)",
+            borderColor: "#1e3a8a",
+            backgroundColor: "rgba(30, 58, 138, 0.1)",
             borderWidth: 3,
             fill: true,
             tension: 0.3,
