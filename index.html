@@ -1,326 +1,143 @@
 <!DOCTYPE html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analisa Algoritma: Penghitung Huruf Kapital</title>
-    <style>
-        :root {
-            --primary: #2563eb;
-            --secondary: #475569;
-            --success: #16a34a;
-            --danger: #dc2626;
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
-            --text-main: #1e293b;
-        }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Analisa Kompleksitas Algoritma - Perbandingan metode Iteratif dan Rekursif untuk menghitung huruf kapital dalam string."
+    />
+    <meta
+      name="keywords"
+      content="algoritma, kompleksitas, iteratif, rekursif, O(n), analisis, tubes, AKA"
+    />
+    <title>Analisa Kompleksitas Algoritma - Penghitung Huruf Kapital</title>
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+    <!-- External CSS -->
+    <link rel="stylesheet" href="styles.css" />
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            padding: 20px;
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        /* Header */
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding: 20px;
-            background: linear-gradient(135deg, var(--primary), #1e40af);
-            color: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-
-        header h1 {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-        }
-
-        header p {
-            opacity: 0.9;
-            font-size: 0.95rem;
-        }
-
-        /* Input Section */
-        .input-section {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
-        }
-
-        textarea {
-            width: 100%;
-            height: 100px;
-            padding: 12px;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
-            resize: vertical;
-            font-size: 1rem;
-            margin-bottom: 15px;
-            transition: border-color 0.3s;
-        }
-
-        textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-
-        .controls {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-        }
-
-        button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: transform 0.1s, opacity 0.2s;
-        }
-
-        button:active {
-            transform: scale(0.98);
-        }
-
-        .btn-run {
-            background-color: var(--primary);
-            color: white;
-        }
-
-        .btn-clear {
-            background-color: var(--secondary);
-            color: white;
-        }
-
-        .btn-sample {
-            background-color: #e2e8f0;
-            color: var(--text-main);
-        }
-
-        /* Results Grid */
-        .results-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        @media (max-width: 768px) {
-            .results-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .card {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 12px;
-            border-top: 5px solid transparent;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            transition: transform 0.2s;
-        }
-
-        .card:hover {
-            transform: translateY(-2px);
-        }
-
-        .card-iterative { border-top-color: var(--success); }
-        .card-recursive { border-top-color: var(--danger); }
-
-        .card h2 {
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .badge {
-            font-size: 0.8rem;
-            padding: 4px 8px;
-            border-radius: 12px;
-            background: #f1f5f9;
-            color: #64748b;
-        }
-
-        .metric {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #f1f5f9;
-        }
-
-        .metric:last-child {
-            border-bottom: none;
-        }
-
-        .metric-label { color: #64748b; font-size: 0.9rem; }
-        .metric-value { font-weight: 700; font-family: monospace; font-size: 1.1rem; }
-
-        /* Visualization Section */
-        .vis-section {
-            background: var(--card-bg);
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        }
-
-        .vis-title {
-            margin-bottom: 20px;
-            font-size: 1.2rem;
-            color: var(--text-main);
-        }
-
-        .theory-comparison {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 30px;
-        }
-
-        .theory-box h3 {
-            font-size: 1rem;
-            margin-bottom: 10px;
-        }
-
-        .bar-container {
-            margin-top: 10px;
-        }
-
-        .bar-label {
-            font-size: 0.85rem;
-            margin-bottom: 5px;
-            display: block;
-        }
-
-        .bar-bg {
-            background: #e2e8f0;
-            height: 20px;
-            border-radius: 10px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .bar-fill {
-            height: 100%;
-            width: 0%;
-            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 0.7rem;
-            white-space: nowrap;
-        }
-
-        .fill-iterative { background-color: var(--success); }
-        .fill-recursive { background-color: var(--danger); }
-
-        .explanation {
-            background: #eff6ff;
-            padding: 15px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            color: #1e3a8a;
-            border-left: 4px solid var(--primary);
-        }
-
-        .code-preview {
-            margin-top: 20px;
-            background: #1e293b;
-            color: #e2e8f0;
-            padding: 15px;
-            border-radius: 8px;
-            font-family: monospace;
-            font-size: 0.85rem;
-            overflow-x: auto;
-            display: none; /* Hidden by default */
-        }
-        
-        .toggle-code {
-            background: none;
-            color: var(--primary);
-            border: none;
-            padding: 0;
-            text-decoration: underline;
-            margin-top: 10px;
-            font-size: 0.9rem;
-        }
-
-        .error-msg {
-            color: var(--danger);
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
-
-    </style>
-</head>
-<body>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  </head>
+  <body>
+    <!-- Background Decorations -->
+    <div class="bg-decorations">
+      <span class="code-symbol" style="top: 10%; left: 5%">{ }</span>
+      <span class="code-symbol" style="top: 20%; right: 8%">O(n)</span>
+      <span class="code-symbol" style="top: 35%; left: 3%">&lt;/&gt;</span>
+      <span class="code-symbol" style="top: 50%; right: 5%">[ ]</span>
+      <span class="code-symbol" style="top: 65%; left: 8%">( )</span>
+      <span class="code-symbol" style="top: 75%; right: 10%">0 1</span>
+      <span class="code-symbol" style="top: 85%; left: 4%">f(x)</span>
+      <span class="code-symbol" style="top: 15%; left: 92%">++</span>
+      <span class="code-symbol" style="top: 45%; left: 95%">==</span>
+      <span class="code-symbol" style="top: 60%; left: 2%">=&gt;</span>
+      <span class="code-symbol" style="top: 30%; right: 3%">&&</span>
+      <span class="code-symbol" style="top: 90%; right: 6%">if</span>
+    </div>
 
     <div class="container">
-        <header>
-            <h1>Analisa Kompleksitas Algoritma</h1>
-            <p>Studi Kasus: Mencari Jumlah Huruf Kapital (Iteratif vs Rekursif)</p>
-        </header>
+      <!-- ==================== HEADER ==================== -->
+      <header>
+        <h1>Analisa <span>Kompleksitas Algoritma</span></h1>
+        <p class="subtitle">
+          Studi Kasus: Menghitung Jumlah Huruf Kapital dalam String
+        </p>
+        <div class="badge-group">
+          <span class="badge">Iteratif</span>
+          <span class="badge">Rekursif</span>
+          <span class="badge">Running Time</span>
+          <span class="badge">Grafik</span>
+        </div>
+      </header>
 
-        <!-- Input Section -->
-        <section class="input-section">
-            <label for="inputText" style="display:block; margin-bottom: 8px; font-weight:600;">Masukkan Teks / Kalimat:</label>
-            <textarea id="inputText" placeholder="Ketik kalimat di sini, contoh: 'Halo Dunia, Saya Sedang Belajar Algoritma.'..."></textarea>
-            
-            <div class="controls">
-                <button class="btn-sample" onclick="loadSample()">Contoh Panjang</button>
-                <button class="btn-clear" onclick="clearInput()">Reset</button>
-                <button class="btn-run" onclick="runAnalysis()">Jalankan Analisa</button>
-            </div>
-            <div id="statusMessage" style="margin-top: 10px; color: #64748b; font-size: 0.9rem;"></div>
-        </section>
+      <!-- ==================== STUDY CASE ==================== -->
+      <section class="study-case">
+        <h2>Deskripsi Studi Kasus</h2>
+        <p>
+          Dalam pemrograman, seringkali kita perlu menganalisis teks untuk
+          berbagai keperluan seperti validasi input, pemrosesan dokumen, atau
+          analisis data. Salah satu tugas sederhana namun fundamental adalah
+          <strong>menghitung jumlah huruf kapital</strong> dalam sebuah string.
+        </p>
+        <p>
+          Studi kasus ini membandingkan dua pendekatan algoritma untuk
+          menyelesaikan masalah tersebut:
+        </p>
+        <ul>
+          <li>
+            <strong>Algoritma Iteratif</strong> - Menggunakan perulangan (loop)
+            untuk memeriksa setiap karakter
+          </li>
+          <li>
+            <strong>Algoritma Rekursif</strong> - Menggunakan pemanggilan fungsi
+            diri sendiri secara berulang
+          </li>
+        </ul>
+        <p>
+          Melalui analisa ini, kita akan memahami perbedaan performa dan
+          efisiensi memori dari kedua pendekatan tersebut.
+        </p>
+      </section>
 
-        <!-- Results Grid -->
-        <div class="results-grid">
-            
-            <!-- Iterative Card -->
-            <div class="card card-iterative">
-                <h2>Metode Iteratif <span class="badge">Looping</span></h2>
-                <div class="metric">
-                    <span class="metric-label">Jumlah Kapital:</span>
-                    <span class="metric-value" id="iterResult">-</span>
-                </div>
-                <div class="metric">
-                    <span class="metric-label">Waktu Eksekusi:</span>
-                    <span class="metric-value" id="iterTime">- ms</span>
-                </div>
-                <div class="metric">
-                    <span class="metric-label">Kompleksitas Waktu:</span>
-                    <span class="metric-value">O(n)</span>
-                </div>
-                <div class="metric">
-                    <span class="metric-label">Kompleksitas Ruang:</span>
-                    <span class="metric-value" style="color:var(--success)">O(1)</span>
-                </div>
-                <button class="toggle-code" onclick="toggleCode('codeIter')">Lihat Kode</button>
-                <div id="codeIter" class="code-preview">
-function countIterative(str) {
+      <!-- ==================== INPUT SECTION ==================== -->
+      <section class="input-section">
+        <label for="inputText"
+          >Masukkan Teks / Kalimat (maks. 10.000 karakter):</label
+        >
+        <textarea
+          id="inputText"
+          maxlength="10000"
+          placeholder="Ketik kalimat di sini, contoh: 'Halo Dunia, Saya Sedang Belajar Algoritma Kompleksitas.'..."
+          oninput="updateCharCount()"
+        ></textarea>
+        <div class="char-counter">
+          <span id="charCount">0</span> / 10.000 karakter
+        </div>
+
+        <div class="controls">
+          <button class="btn-outline" onclick="loadSample()">
+            Contoh 10.000 Karakter
+          </button>
+          <button class="btn-secondary" onclick="clearInput()">Reset</button>
+          <button class="btn-primary" onclick="runAnalysis()">
+            Jalankan Analisa
+          </button>
+        </div>
+        <div id="statusMessage"></div>
+      </section>
+
+      <!-- ==================== RESULTS GRID ==================== -->
+      <h2 class="section-title">Hasil Perbandingan</h2>
+      <div class="results-grid">
+        <!-- Iterative Card -->
+        <div class="algo-card iterative">
+          <h3>
+            Metode Iteratif
+            <span class="algo-badge">Looping</span>
+          </h3>
+          <div class="metric">
+            <span class="metric-label">Jumlah Kapital:</span>
+            <span class="metric-value" id="iterResult">-</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Waktu Eksekusi:</span>
+            <span class="metric-value" id="iterTime">- ms</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Kompleksitas Waktu:</span>
+            <span class="metric-value">O(n)</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Kompleksitas Ruang:</span>
+            <span class="metric-value success">O(1)</span>
+          </div>
+          <button class="code-toggle" onclick="toggleCode('codeIter')">
+            Lihat Kode
+          </button>
+          <div id="codeIter" class="code-preview">
+            <pre>
+function countCapitalIterative(str) {
   let count = 0;
   for (let i = 0; i < str.length; i++) {
     if (str[i] >= 'A' && str[i] <= 'Z') {
@@ -328,205 +145,258 @@ function countIterative(str) {
     }
   }
   return count;
-}
-                </div>
-            </div>
+}</pre
+            >
+          </div>
+        </div>
 
-            <!-- Recursive Card -->
-            <div class="card card-recursive">
-                <h2>Metode Rekursif <span class="badge">Self-Calling</span></h2>
-                <div class="metric">
-                    <span class="metric-label">Jumlah Kapital:</span>
-                    <span class="metric-value" id="recResult">-</span>
-                </div>
-                <div class="metric">
-                    <span class="metric-label">Waktu Eksekusi:</span>
-                    <span class="metric-value" id="recTime">- ms</span>
-                </div>
-                <div class="metric">
-                    <span class="metric-label">Kompleksitas Waktu:</span>
-                    <span class="metric-value">O(n)</span>
-                </div>
-                <div class="metric">
-                    <span class="metric-label">Kompleksitas Ruang:</span>
-                    <span class="metric-value" style="color:var(--danger)">O(n)</span>
-                </div>
-                <button class="toggle-code" onclick="toggleCode('codeRec')">Lihat Kode</button>
-                <div id="codeRec" class="code-preview">
-function countRecursive(str, index = 0) {
+        <!-- Recursive Card -->
+        <div class="algo-card recursive">
+          <h3>
+            Metode Rekursif
+            <span class="algo-badge">Self-Calling</span>
+          </h3>
+          <div class="metric">
+            <span class="metric-label">Jumlah Kapital:</span>
+            <span class="metric-value" id="recResult">-</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Waktu Eksekusi:</span>
+            <span class="metric-value" id="recTime">- ms</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Kompleksitas Waktu:</span>
+            <span class="metric-value">O(n)</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Kompleksitas Ruang:</span>
+            <span class="metric-value danger">O(n)</span>
+          </div>
+          <button class="code-toggle" onclick="toggleCode('codeRec')">
+            Lihat Kode
+          </button>
+          <div id="codeRec" class="code-preview">
+            <pre>
+function countCapitalRecursive(str, index = 0) {
   // Base Case
   if (index >= str.length) return 0;
   
-  // Check current char
+  // Check current character
   const isCap = (str[index] >= 'A' 
               && str[index] <= 'Z') ? 1 : 0;
               
   // Recursive Step
-  return isCap + countRecursive(str, index + 1);
-}
+  return isCap + countCapitalRecursive(str, index + 1);
+}</pre
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== MEMORY VISUALIZATION ==================== -->
+      <section class="vis-section">
+        <h2>Analisa Penggunaan Memori (Stack)</h2>
+
+        <div class="memory-comparison">
+          <div class="memory-box">
+            <h4>Iteratif (Efisien)</h4>
+            <p>
+              Hanya menggunakan satu variabel counter. Memori tetap stabil
+              berapapun panjang input.
+            </p>
+            <div class="bar-container">
+              <span class="bar-label">Penggunaan Stack Memory</span>
+              <div class="bar-bg">
+                <div id="barIter" class="bar-fill iterative" style="width: 20%">
+                  O(1) - Konstan
                 </div>
+              </div>
             </div>
+          </div>
+
+          <div class="memory-box">
+            <h4>Rekursif (Boros Memori)</h4>
+            <p>
+              Setiap karakter membuat "tumpukan" fungsi baru di memori hingga
+              base case tercapai.
+            </p>
+            <div class="bar-container">
+              <span class="bar-label">Penggunaan Stack Memory</span>
+              <div class="bar-bg">
+                <div id="barRec" class="bar-fill recursive" style="width: 15%">
+                  O(n) Linear
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <!-- Visual Analysis -->
-        <section class="vis-section">
-            <h2 class="vis-title">Analisa Penggunaan Memori (Stack)</h2>
-            
-            <div class="theory-comparison">
-                <div class="theory-box">
-                    <h3>Iteratif (Efisien)</h3>
-                    <p style="font-size: 0.9rem; color: #64748b;">Hanya menggunakan satu variabel counter. Memori tetap stabil berapapun panjang kalimatnya.</p>
-                    <div class="bar-container">
-                        <span class="bar-label">Penggunaan Stack Memory</span>
-                        <div class="bar-bg">
-                            <div id="barIter" class="bar-fill fill-iterative" style="width: 5%;">O(1)</div>
-                        </div>
-                    </div>
-                </div>
+        <div class="explanation">
+          <strong>Kesimpulan Memori:</strong><br />
+          Meskipun kedua algoritma memeriksa setiap karakter sekali (Linear Time
+          <code>O(n)</code>), <strong>Metode Iteratif</strong> jauh lebih baik
+          untuk teks panjang karena kompleksitas ruang <code>O(1)</code>.
+          <br /><br />
+          Metode Rekursif memiliki kompleksitas ruang <code>O(n)</code>. Jika
+          input sangat panjang, metode rekursif akan menyebabkan
+          <em>Stack Overflow</em> (error), sedangkan iteratif tetap berjalan
+          lancar.
+        </div>
 
-                <div class="theory-box">
-                    <h3>Rekursif (Boros Memori)</h3>
-                    <p style="font-size: 0.9rem; color: #64748b;">Setiap karakter membuat "tumpukan" fungsi baru di memori sampai akhir kalimat tercapai.</p>
-                    <div class="bar-container">
-                        <span class="bar-label">Penggunaan Stack Memory</span>
-                        <div class="bar-bg">
-                            <div id="barRec" class="bar-fill fill-recursive" style="width: 5%;">O(n)</div>
-                        </div>
-                    </div>
-                </div>
+        <div class="stack-test-section">
+          <h4>Test Stack Limit Browser</h4>
+          <p>
+            Klik tombol untuk mengecek berapa maksimal kedalaman rekursi yang
+            didukung browser Anda.
+          </p>
+          <div class="stack-test-controls">
+            <button class="btn-primary" onclick="testStackLimit()">
+              Test Stack Limit
+            </button>
+            <div id="stackLimitResult" class="stack-result">
+              Klik tombol untuk memulai test.
             </div>
+          </div>
+        </div>
+      </section>
 
-            <div class="explanation">
-                <strong>Kesimpulan Analisa:</strong>
-                <br>
-                Meskipun kedua algoritma memeriksa setiap karakter sekali (Linear Time <code>O(n)</code>), <strong>Metode Iteratif</strong> jauh lebih baik untuk teks panjang. 
-                <br><br>
-                Metode Rekursif memiliki kompleksitas ruang <code>O(n)</code>. Jika Anda memasukkan teks yang sangat panjang (misal: > 10.000 karakter), metode rekursif akan menyebabkan <em>Stack Overflow</em> (Browser crash/error), sedangkan iteratif akan tetap berjalan lancar.
-            </div>
-        </section>
+      <!-- ==================== RUNNING TIME CHART ==================== -->
+      <section class="chart-section">
+        <h2>Grafik Perbandingan Running Time</h2>
+        <p>
+          Jalankan benchmark untuk melihat perbandingan waktu eksekusi antara
+          algoritma Iteratif dan Rekursif pada berbagai ukuran input (10, 50,
+          100, 500, 1000, 2000, 3000, 5000, 7000, 8000, 9000, 10000 karakter).
+        </p>
+
+        <div class="benchmark-controls">
+          <button class="btn-success" onclick="runBenchmark()">
+            Run Benchmark
+          </button>
+          <div id="benchmarkStatus" class="benchmark-status">
+            Klik tombol untuk menjalankan benchmark dengan berbagai ukuran
+            input.
+          </div>
+        </div>
+
+        <div class="chart-container">
+          <canvas id="benchmarkChart"></canvas>
+        </div>
+      </section>
+
+      <!-- ==================== ANALYSIS SECTION ==================== -->
+      <section class="analysis-section">
+        <h2>Analisis Perbandingan Kedua Algoritma</h2>
+
+        <table class="complexity-table">
+          <thead>
+            <tr>
+              <th>Aspek</th>
+              <th>Iteratif</th>
+              <th>Rekursif</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Kompleksitas Waktu</strong></td>
+              <td>O(n) - Linear</td>
+              <td>O(n) - Linear</td>
+            </tr>
+            <tr>
+              <td><strong>Kompleksitas Ruang</strong></td>
+              <td class="highlight-good">O(1) - Konstanta</td>
+              <td class="highlight-bad">O(n) - Linear</td>
+            </tr>
+            <tr>
+              <td><strong>Overhead</strong></td>
+              <td class="highlight-good">Rendah (loop biasa)</td>
+              <td class="highlight-bad">Tinggi (function call overhead)</td>
+            </tr>
+            <tr>
+              <td><strong>Risiko Stack Overflow</strong></td>
+              <td class="highlight-good">Tidak ada</td>
+              <td class="highlight-bad">Ada (input besar)</td>
+            </tr>
+            <tr>
+              <td><strong>Readability</strong></td>
+              <td>Mudah dipahami</td>
+              <td>Lebih elegan, konsep matematis</td>
+            </tr>
+            <tr>
+              <td><strong>Best for</strong></td>
+              <td>Input besar, production code</td>
+              <td>Input kecil, educational purpose</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="analysis-conclusion">
+          <h4>Kesimpulan Akhir</h4>
+          <p>
+            Untuk studi kasus <strong>"Menghitung Huruf Kapital"</strong>,
+            algoritma <strong>Iteratif</strong>
+            adalah pilihan yang lebih baik karena:
+          </p>
+          <ul style="margin-top: 10px; padding-left: 20px">
+            <li>Penggunaan memori yang konstan O(1) dibanding O(n)</li>
+            <li>Tidak ada risiko Stack Overflow untuk input besar</li>
+            <li>Performa yang lebih konsisten dan predictable</li>
+            <li>Overhead yang lebih rendah tanpa recursive function calls</li>
+          </ul>
+          <p style="margin-top: 15px">
+            Namun, algoritma Rekursif tetap valuable untuk dipelajari karena
+            memberikan pemahaman tentang konsep divide-and-conquer dan pemecahan
+            masalah secara matematis.
+          </p>
+        </div>
+      </section>
+
+      <!-- ==================== REFERENCES ==================== -->
+      <section class="references-section">
+        <h2>Referensi</h2>
+        <ul>
+          <li>
+            <strong>Introduction to Algorithms (CLRS)</strong> - Cormen,
+            Leiserson, Rivest, Stein. MIT Press. Chapter 2: Getting Started -
+            Analyzing Algorithms.
+          </li>
+          <li>
+            <strong>Big-O Notation</strong> -
+            <a
+              href="https://en.wikipedia.org/wiki/Big_O_notation"
+              target="_blank"
+              >Wikipedia: Big O Notation</a
+            >
+          </li>
+          <li>
+            <strong>Recursion vs Iteration</strong> -
+            <a
+              href="https://www.geeksforgeeks.org/difference-between-recursion-and-iteration/"
+              target="_blank"
+              >GeeksforGeeks</a
+            >
+          </li>
+          <li>
+            <strong>Call Stack</strong> -
+            <a
+              href="https://developer.mozilla.org/en-US/docs/Glossary/Call_stack"
+              target="_blank"
+              >MDN Web Docs</a
+            >
+          </li>
+          <li>
+            <strong>JavaScript Performance</strong> -
+            <a
+              href="https://developer.mozilla.org/en-US/docs/Web/API/Performance/now"
+              target="_blank"
+              >MDN: Performance.now()</a
+            >
+          </li>
+        </ul>
+      </section>
     </div>
 
-    <script>
-        // --- Algoritma Iteratif ---
-        function countCapitalIterative(str) {
-            let count = 0;
-            for (let i = 0; i < str.length; i++) {
-                if (str[i] >= 'A' && str[i] <= 'Z') {
-                    count++;
-                }
-            }
-            return count;
-        }
-
-        // --- Algoritma Rekursif ---
-        function countCapitalRecursive(str, index = 0) {
-            // Base case: jika index melebihi panjang string
-            if (index >= str.length) {
-                return 0;
-            }
-            
-            // Cek apakah karakter saat ini kapital
-            let isCapital = (str[index] >= 'A' && str[index] <= 'Z') ? 1 : 0;
-            
-            // Recursive step: tambah hasil saat ini dengan hasil sisa string
-            return isCapital + countCapitalRecursive(str, index + 1);
-        }
-
-        // --- Fungsi UI & Helper ---
-
-        function toggleCode(id) {
-            const el = document.getElementById(id);
-            if (el.style.display === "block") {
-                el.style.display = "none";
-            } else {
-                el.style.display = "block";
-            }
-        }
-
-        function clearInput() {
-            document.getElementById('inputText').value = '';
-            resetResults();
-        }
-
-        function resetResults() {
-            document.getElementById('iterResult').innerText = '-';
-            document.getElementById('iterTime').innerText = '- ms';
-            document.getElementById('recResult').innerText = '-';
-            document.getElementById('recTime').innerText = '- ms';
-            document.getElementById('barRec').style.width = '5%';
-            document.getElementById('barRec').innerText = 'O(n)';
-            document.getElementById('statusMessage').innerText = '';
-        }
-
-        function loadSample() {
-            // Membuat teks dummy yang cukup panjang untuk melihat efek performa (tapi aman untuk rekursif browser modern)
-            // Batas aman stack rekursi browser biasanya sekitar 10.000 - 15.000 tumpukan
-            const sentence = "Algoritma Pemrograman Itu Menyenangkan. ";
-            let longText = sentence.repeat(150); // Sekitar 6000 karakter (aman)
-            document.getElementById('inputText').value = longText;
-            document.getElementById('statusMessage').innerText = `Teks sampel dimuat (${longText.length} karakter).`;
-        }
-
-        function runAnalysis() {
-            const text = document.getElementById('inputText').value;
-            const statusEl = document.getElementById('statusMessage');
-            
-            if (!text) {
-                alert("Mohon masukkan teks terlebih dahulu!");
-                return;
-            }
-
-            // 1. Jalankan Iteratif
-            const t0 = performance.now();
-            const iterResult = countCapitalIterative(text);
-            const t1 = performance.now();
-            const iterTime = (t1 - t0).toFixed(4);
-
-            // Update UI Iteratif
-            document.getElementById('iterResult').innerText = iterResult;
-            document.getElementById('iterTime').innerText = iterTime + ' ms';
-
-            // 2. Jalankan Rekursif (Dengan Error Handling untuk Stack Overflow)
-            // Batas aman kasar untuk browser (tiap browser beda, Chrome ~10k, Firefox ~30k frames)
-            const SAFE_RECURSION_LIMIT = 8000; 
-
-            if (text.length > SAFE_RECURSION_LIMIT) {
-                document.getElementById('recResult').innerHTML = "<span class='error-msg'>Stack Overflow!</span>";
-                document.getElementById('recTime').innerText = "Gagal";
-                document.getElementById('barRec').style.width = "100%";
-                document.getElementById('barRec').innerText = "MEMORY FULL";
-                document.getElementById('barRec').style.backgroundColor = "#991b1b"; // Dark red
-                
-                statusEl.innerHTML = `<span style="color:red">Peringatan: Teks terlalu panjang (${text.length} char) untuk metode Rekursif di JavaScript (limit stack browser).</span>`;
-            } else {
-                try {
-                    const t2 = performance.now();
-                    const recResult = countCapitalRecursive(text);
-                    const t3 = performance.now();
-                    const recTime = (t3 - t2).toFixed(4);
-
-                    // Update UI Rekursif
-                    document.getElementById('recResult').innerText = recResult;
-                    document.getElementById('recTime').innerText = recTime + ' ms';
-                    
-                    // Visualisasi Stack (Simulasi sederhana berdasarkan panjang input)
-                    // Kita map panjang 0-5000 ke persentase 5%-100%
-                    let stackPercentage = Math.min(100, Math.max(5, (text.length / 2000) * 100));
-                    document.getElementById('barRec').style.width = stackPercentage + "%";
-                    document.getElementById('barRec').innerText = `Stack Depth: ${text.length}`;
-                    document.getElementById('barRec').style.backgroundColor = ""; // Reset color
-                    
-                    statusEl.innerText = `Analisa selesai. Panjang teks: ${text.length} karakter.`;
-
-                } catch (e) {
-                    // Fallback jika browser crash/limit
-                    console.error(e);
-                    document.getElementById('recResult').innerHTML = "<span class='error-msg'>Error</span>";
-                    document.getElementById('recTime').innerText = "-";
-                    statusEl.innerText = "Terjadi kesalahan pada eksekusi rekursif.";
-                }
-            }
-        }
-    </script>
-</body>
+    <!-- External JavaScript -->
+    <script src="script.js"></script>
+  </body>
 </html>
